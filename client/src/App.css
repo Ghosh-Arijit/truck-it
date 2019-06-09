@@ -1,0 +1,109 @@
+.App {
+  text-align: center;
+}
+
+.App-logo {
+  animation: App-logo-spin infinite 20s linear;
+  height: 40vmin;
+  pointer-events: none;
+}
+
+.App-header {
+  background-color: #282c34;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+.App-link {
+  color: #61dafb;
+}
+
+/* .bg{background: url('/images/trucks.jpg') no-repeat; width: 100%; height: 100vh;} */
+/* .bg{
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  padding: 200px 0;
+  height: 100vh;
+} */
+.bg{
+  background: url('./images/trucks1.jpg');
+  width: 100%;
+  height: 110vh;
+  background-repeat: no-repeat
+
+}
+.bg-reg{
+  background: url('./images/trucks1.jpg');
+  width: 100%;
+  height: 105vh;
+  background-repeat: no-repeat
+
+}
+.form-container{
+  border:0px solid;
+  border-color: #fff;
+  padding: 30px 50px;
+  margin-top: 10vh;
+  -webkit-box-shadow: -1px 4px 26px 11px rgba(0,0,0,0.75);
+  -moz-box-shadow: -1px 4px 26px 11px rgba(0,0,0,0.75);
+  box-shadow: -1px 4px 26px 11px rgba(0,0,0,0.75);
+}
+.form-container-reg{
+  border:0px solid;
+  border-color: #fff;
+  padding: 30px 40px;
+  width: 100%;
+  margin-top: 17%;
+  -webkit-box-shadow: -1px 4px 26px 11px rgba(0,0,0,0.75);
+  -moz-box-shadow: -1px 4px 26px 11px rgba(0,0,0,0.75);
+  box-shadow: -1px 4px 26px 11px rgba(0,0,0,0.75);
+}
+/* .bg > img{
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+} */
+/* .bg:before{
+  content: "";
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  background: #00000073;
+  z-index: 1;
+} */
+/* .bg .container-fluid{
+  position: relative;
+  z-index: 2;
+} */
+/* form{
+  background: #00000069;
+  padding: 50px;
+  width: 500px;
+  text-align: left;
+  box-shadow: 0 0 20px 0 black;
+  color: white;
+  border: 1px solid #fff;
+} */
+/* label {
+  display: inline-block;
+  margin-bottom: 0.5rem;
+} */
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}

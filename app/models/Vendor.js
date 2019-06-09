@@ -27,33 +27,24 @@ const vendorSchema = new Schema({
         }
     ],
     address: {
-        type: String
+        full: String,
+        pincode: String
     },
     payment: {
         bank_account:{
-            name:{
-                type: String
-            },
-            account_number: {
+            number: {
                 type: Number
             },
             IFSC_code: {
                 type: String
-            },
-            branch: {
-                type: String
             }
-        },
-        paytm: {
-                type: String
         }
-
     },
     document: {
         type: String,
     },
     isVerified: {
-        type: String,
+        type: Boolean,
         default: false
     }
 })

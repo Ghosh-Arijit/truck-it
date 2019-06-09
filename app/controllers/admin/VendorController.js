@@ -10,32 +10,33 @@ const { adminAccess }= require("../../middlewares/access")
 
 
 //localhost:3005/admin/vendor/venderUser
-router.get("/venderUser",userAuth,adminAccess,function(req,res){
-    User.find().where('role').in('vendor')
-        .then((users)=> {
-            res.send(users)
-        })
-        .catch((err)=> {
-            res.send(err)
-        })
-})
+// router.get("/venderUser",userAuth,adminAccess,function(req,res){
+//     User.find().where('role').in('vendor')
+//         .then((users)=> {
+//             res.send(users)
+//         })
+//         .catch((err)=> {
+//             res.send(err)
+//         })
+// })
 
-//localhost:3005/admin/vendor/venderDetails
-router.get("/venderDetails",userAuth,adminAccess,function(req,res){
+//localhost:3005/admin/vendor
+router.get("/",userAuth,adminAccess,function(req,res){
     Vendor.find()
-        .then((users)=> {
-            res.send(users)
+    .populate('user' , 'name mobile email')
+        .then((vendors)=> {
+            res.send(vendors)
         })
         .catch((err)=> {
             res.send(err)
         })
 })
 
-//localhost:3005/admin/vendor:id
+//localhost:3005/admin/vendor/:id
 router.get("/:id",userAuth,adminAccess,function(req,res){
     const id= req.params.id
     Vendor.findOne({_id:id})
-    .populate('user')
+    .populate('user' , 'name mobile email')
         .then((vendor)=> {
             res.send(vendor)
         })
@@ -51,11 +52,11 @@ router.put("/:id",userAuth,adminAccess,function(req,res){
     const body=  _.pick(req.body,["isVerified"])
     console.log("hi")
     Vendor.findOneAndUpdate({_id: id},body,{new:true,runValidators:true})
-    .populate('user')
-        .then(function(vendor){
+    .populate('user','name mobile email')
+        .then((vendor)=> {
             res.send(vendor)
         })
-        .catch(function(err){
+        .catch((err)=> {
             res.send(err)
     })
 })
@@ -64,8 +65,8 @@ router.put("/:id",userAuth,adminAccess,function(req,res){
 router.delete("/:id",userAuth,adminAccess,function(req,res){
     const id = req.params.id
     Vendor.findByIdAndDelete(id)
-        .then(function(vendor){
-            if(user){
+        .then((vendor)=> {
+            if(vendor){
                 res.send({
                     vendor,
                     notice: "Successfully Deleted"
@@ -76,7 +77,7 @@ router.delete("/:id",userAuth,adminAccess,function(req,res){
                 })
             }
         })
-        .catch(function(err){
+        .catch((err)=> {
             res.send(err)
         })
 })

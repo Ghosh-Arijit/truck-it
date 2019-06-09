@@ -6,6 +6,7 @@ const { User }= require("../models/User")
 const { Vendor }= require("../models/Vendor")
 
 const { userAuth }= require("../middlewares/auth")
+const { vendorAccess }= require("../middlewares/access")
 
 //multer
 const multer= require("multer")
@@ -32,20 +33,32 @@ const upload = multer({
     fileFilter
 })
 
-//localhost:3000/vendor
-router.get("/",userAuth,function(req,res){
-    Vendor.find({"user" : req.user._id})
-        .populate('user','name mobile email')
-            .then(function(vendor){
-                res.send(vendor)
-            })
-            .catch(function(error){
-                res.send({error})
-            })
+//localhost:3005/vendor/register
+router.post("/register", (req,res) => {
+    const body = _.pick(req.body,["user"])
+    const vendor = new Vendor(body)
+    vendor.save()
+        .then(vendor => {
+            res.send(vendor)
+        })
+        .catch(err => {
+            res.send(err)
+        })
 })
 
 //localhost:3000/vendor
-router.post("/",userAuth,upload.single('document'),function(req,res){
+router.get("/",userAuth,vendorAccess,function(req,res){
+    Vendor.findOne({user: req.user._id})
+        .then(vendor => {
+            res.send({success: vendor})
+        })
+        .catch(err => {
+            res.send(err)
+        })
+})
+
+//localhost:3000/vendor
+router.post("/",userAuth,vendorAccess,upload.single('document'),function(req,res){
     const body= _.pick(req.body,["address","name","account_number","IFSC_code","branch","paytm","document"])
     body.user= req.user._id
     if(req.file){
@@ -59,14 +72,14 @@ router.post("/",userAuth,upload.single('document'),function(req,res){
     const vendor= new Vendor(body)
     vendor.save()
 
-        .then(function(vendor){
+        .then((vendor)=> {
             res.send({
                 vendor,
                 notice: "Successfully inserted your information"
 
             })
         })
-        .catch(function(err){
+        .catch((err)=> {
             res.send({
                 err,
                 notice: "Failed to enter your information"
@@ -74,27 +87,45 @@ router.post("/",userAuth,upload.single('document'),function(req,res){
         })
 })
 
-//localhost:3000/vendor/:id
-router.put("/:id",userAuth,upload.single('document'),function(req,res){
-    const id= req.params.id
-    const body= _.pick(req.body,["address","name","account_number","IFSC_code","branch","paytm","document"])
-    //body.user= req.user._id
-    if(req.file){
-        body.document = req.file.filename
+//localhost:3000/vendor
+router.put("/",userAuth,vendorAccess,upload.single('document'),function(req,res){
+    //const id= req.params.id
+    const { address, pincode, bank_account_number, bank_account_ifsc} = req.body
+    //const body= _.pick(req.body,["address","pincode","bank_account_number","bank_account_ifsc","pan","document"])
+    const id= req.user._id
+    // if(req.file){
+    //     body.document = req.file.filename
+    // }
+    // body.payment = {
+    //     bank_account: {
+    //         number: bank_account_number,
+    //         ifsc: bank_account_ifsc
+    //     }
+    // }
+    // body.address = {
+    //         full: address,
+    //         pincode
+    // }
+
+    const body = {
+        address: {
+            full: address,
+            pincode
+        },
+        payment: {
+            bank_account: {
+                number: bank_account_number,
+                IFSC_code: bank_account_ifsc
+            }
+        },
+        //document:  req.files['aadhar'] ? req.files['aadhar'][0].location || req.files['aadhar'][0].filename : aadhar
     }
-    const {name,account_number,IFSC_code,branch,paytm} = body
-    body.payment = {
-        bank_account: {name,account_number,IFSC_code,branch},
-        paytm: paytm
-    }
-    Vendor.findOneAndUpdate({_id:id},body,{new:true,runValidators:true})
-        .then(function(vendor){
-            res.send({
-                vendor,
-                notice: "Successfully updated"
-            })
+
+    Vendor.findOneAndUpdate({user:id},body,{new:true,runValidators:true})
+        .then((vendor)=> {
+            res.send({success: vendor})
         })
-        .catch(function(err){
+        .catch((err)=> {
             res.send(err)
         })
 })

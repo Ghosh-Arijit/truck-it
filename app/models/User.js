@@ -19,7 +19,7 @@ const userSchema = new Schema({
         maxlength: [12, 'mobile number is long'],
         minlength: [10, 'mobile number is short'],
         required: [true, 'mobile number is required'],
-        unique: "true"
+        unique: true
     },
     email: {
         type: String,
@@ -61,6 +61,10 @@ const userSchema = new Schema({
         type: Boolean,
         default: true
     },
+    isVerified: {
+        type: Boolean,
+        default: false
+    }
 })
 
 userSchema.plugin(uniqueValidator, { message: '{PATH} already exists' })
@@ -68,13 +72,14 @@ userSchema.plugin(uniqueValidator, { message: '{PATH} already exists' })
 //pre hooks - before saving
 userSchema.pre("save",function(next){
     const user = this
-    if(user.isNew){
+    if(user.passUpdate){
         function encryptPassword(){
             return bcrypt.genSalt(10)
                 .then(function(salt){
                     return bcrypt.hash(user.password,salt)
                     .then(function(encPass){
                         user.password= encPass
+                        user.passUpdate = false
                     })
                 })
         }
@@ -155,11 +160,30 @@ userSchema.methods.generateToken = function() {
     })
     return user.save()
     .then(function(user){
-        return Promise.resolve({name: user.name,mobile: user.mobile,email: user.email, id: user._id, tokens: user.tokens,role: user.role})
+        return Promise.resolve({
+            name: user.name,
+            mobile: user.mobile,
+            email: user.email, 
+            id: user._id, 
+            token,
+            role: user.role,
+            allowAccess: user.allowAccess
+        })
     })
     .catch(function(err){
         return Promise.reject(err)
     })
+}
+
+userSchema.methods.updatePassword = function(){
+    const user = this
+    return user.save()
+        .then(user => {
+            return Promise.resolve(user)
+        })
+        .catch(err => {
+            return Promise.reject(err)
+        })
 }
 
 const User = mongoose.model("User",userSchema)

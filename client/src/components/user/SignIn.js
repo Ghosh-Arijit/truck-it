@@ -44,7 +44,6 @@ class SignIn extends React.Component {
                         }))
                         this.props.dispatch(setUser(res.data))
                         localStorage.setItem('token',JSON.stringify(res.data.token))
-                        window.alert('Success')
                         this.props.history.push(`/${res.data.role}`)
                    }
                 })
@@ -92,7 +91,7 @@ class SignIn extends React.Component {
                                 { this.state.error && <p className="text-danger text-center mt-3">{this.state.error}</p> }
                             </Form>
                             <div>
-                            <p className="text-white text-center">Don't have an account ? <Link to="register">Create new</Link></p>
+                            <p className="text-white text-center">Don't have an account ? <Link to="/">Create new</Link></p>
                             </div>
                             </Col>
                             <Col md={4} sm={4} xs={12}>

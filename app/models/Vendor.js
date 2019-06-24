@@ -41,12 +41,53 @@ const vendorSchema = new Schema({
         }
     },
     document: {
-        type: String,
+        aadhar: String
     },
     isVerified: {
         type: Boolean,
         default: false
-    }
+    },
+    vehicles: [{
+        vehicle: {
+            type: Schema.Types.ObjectId,
+            ref: 'Vehicle',
+            required: [true, 'Vehicle is required']
+        },
+        number_plate: {
+            type: String,
+            required: [true, 'Number plate is required']
+        },
+        // capacity:  {
+        //     type: String,
+        //     required: [true, 'Capacity is required']
+        // },
+        pricing: {
+            inter_city: {
+                ratePerKm: {
+                    type: Number,
+                    required: [true, 'Intercity rate is required']
+                },
+                // ratePerMin: {
+                //     type: Number,
+                //     required: [true, 'Intercity rate is required']
+                // }
+            },
+            intra_city: {
+                ratePerKm: {
+                    type: Number,
+                    required: [true, 'Intracity rate is required']
+                },
+                // ratePerMin: {
+                //     type: Number,
+                //     required: [true, 'Intracity rate is required']
+                // }
+            }
+        },
+        helper_rate: {
+            type: Number,
+            required: [true, 'Helper rate is required']
+        }
+    }]
 })
 
 vendorSchema.plugin(uniqueValidator, { message: '{PATH} already present'})

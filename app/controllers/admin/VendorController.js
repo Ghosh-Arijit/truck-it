@@ -8,18 +8,6 @@ const { Vendor }= require("../../models/Vendor")
 const { userAuth }= require("../../middlewares/auth")
 const { adminAccess }= require("../../middlewares/access")
 
-
-//localhost:3005/admin/vendor/venderUser
-// router.get("/venderUser",userAuth,adminAccess,function(req,res){
-//     User.find().where('role').in('vendor')
-//         .then((users)=> {
-//             res.send(users)
-//         })
-//         .catch((err)=> {
-//             res.send(err)
-//         })
-// })
-
 //localhost:3005/admin/vendor
 router.get("/",userAuth,adminAccess,function(req,res){
     Vendor.find()
@@ -84,6 +72,6 @@ router.delete("/:id",userAuth,adminAccess,function(req,res){
 
 
 module.exports= {
-    vendorAdminController: router
+    vendorAdminRouter: router
 }
 

@@ -1,22 +1,38 @@
 import React from 'react'
 import axios from 'axios'
 import { Link } from 'react-router-dom'
+import {ToastContainer, toast} from 'react-toastify'
 import {withFormik, Form, Field} from 'formik'
 import * as Yup from 'yup'
+import 'react-toastify/dist/ReactToastify.css';
 
+
+toast.configure();
 const Register = (props)=> {
-    const { errors, touched, isSubmitting, status}= props
+    const { errors, touched, isSubmitting}= props
     document.title= 'Register'
+       
     return(
         <div className = "fluid bg-reg ">
             <div className="row ">
                 <div className="col-md-4 col-sm-4 col-xs-12 ">
+                <ToastContainer
+                position="top-right"
+                autoClose={5000}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnVisibilityChange
+                draggable
+                pauseOnHover
+                />
                 </div>
                 <div className="col-md-4 col-sm-4 col-xs-12 ">
                     <Form className= "form-container-reg">
-                        <h5 className="text-center">
-                            <span className="badge badge-pill badge-dark">Create a New Account</span>
-                        </h5>
+                        <h3 className="text-center">
+                            <span className="badge badge-pill badge-dark">SignUp!</span>
+                        </h3>
                             <div className="form-group pt-2">
                                 <Field  type="text" name="name" className="form-control"  placeholder="Full Name" />
                                 {touched.name && errors.name && <p className="text-danger">{errors.name}</p>}
@@ -54,7 +70,6 @@ const Register = (props)=> {
                             { touched.role && errors.role && <p className="text-danger">{errors.role}</p> }
                             <button className="btn btn-success btn-lg btn-block mt-4" type="submit" disabled={isSubmitting}>Register</button>
                         </Form>
-                        {status && <p className="text-success">{status.success}</p>}
                         <div>
                             <p className="text-white text-center">Already have an account ? <Link to="signIn">SignIn</Link></p>
                         </div>
@@ -100,16 +115,22 @@ const formikRegister = withFormik({
                   .required("Role is required")
     }),
 
-    handleSubmit(values, {setErrors, resetForm, setSubmitting,setStatus, props}){
-        setStatus({success: ''})
+    handleSubmit(values, {setErrors, resetForm, setSubmitting}){
+        //setStatus({success: ''})
 
         const vendorRegister= (user)=> {
             console.log(user)
             axios.post('http://localhost:3005/vendor/register', {user})
                 .then(res=>{
                     resetForm()
-                    window.alert("Successfully Registered")
-                    props.history.push('signIn')
+                    toast.success("Successfully Registered !", {
+                        position: "top-right",
+                        autoClose: 5000,
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true
+                  })
                 })
         }
         axios.post('http://localhost:3005/register', values)
@@ -130,8 +151,15 @@ const formikRegister = withFormik({
                             vendorRegister(res.data._id)
                         }else{
                             resetForm()
-                            window.alert("Successfully Registered")
-                            props.history.push('signIn')
+                            toast.success("Successfully Registered !", {
+                                position: "top-right",
+                                autoClose: 5000,
+                                hideProgressBar: false,
+                                closeOnClick: true,
+                                pauseOnHover: true,
+                                draggable: true
+                          })
+                           
                             
                         }
 
